@@ -1,0 +1,18 @@
+%h1 Week Meetings
+
+= form_for :meeting, url: update_week_meetings_path, html: { method: :post } do
+  = week_calendar do |date|
+    = date
+    - meeting = @meetings.find_or_initialize_by(start_time: date)
+    - if meeting.id.nil?
+      %p
+        = hidden_field_tag "meeting[#{date}][start_time]", date
+      %p
+        = text_field_tag "meeting[#{date}][content]"
+    - else
+      = fields_for "meeting[]", meeting do |meeting_fields|
+        %p
+          = meeting_fields.hidden_field :start_time
+        %p
+          = meeting_fields.text_field :content
+  = submit_tag
